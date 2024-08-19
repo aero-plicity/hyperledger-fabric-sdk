@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faraday', '~>2.10'
   s.add_dependency 'grpc', '~>1.65'
   s.add_dependency 'google-protobuf', '~>4.27'
-  s.add_dependency 'digest-sha3', '~>1.1'
+  s.add_dependency 'keccak', '~>1.3'
   s.add_dependency 'hashie', '~>5.0'
 
   s.add_development_dependency "bundler", "~> 2.0"

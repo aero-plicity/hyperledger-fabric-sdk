@@ -69,7 +69,7 @@ module Fabric
     end
 
     def keccak256(bytes)
-      Digest::SHA3.new(256).digest bytes
+      Digest::Keccak.new(256).digest bytes
     end
 
     def restore_public_key(private_key)
