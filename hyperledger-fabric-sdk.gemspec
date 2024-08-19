@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faraday_middleware', '~>1.2'
   s.add_dependency 'faraday', '~>1.10'
   s.add_dependency 'grpc', '~>1.65'
-  s.add_dependency 'google-protobuf', '~>4.27'
+  s.add_dependency 'google-protobuf', '~>3.25'
   s.add_dependency 'keccak', '~>1.3'
   s.add_dependency 'hashie', '~>5.0'
 
