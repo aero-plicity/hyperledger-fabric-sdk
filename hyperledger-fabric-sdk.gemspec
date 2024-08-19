@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.3.4'
 
   s.add_dependency 'faraday_middleware', '~>1.2'
-  s.add_dependency 'faraday', '~>2.10'
+  s.add_dependency 'faraday', '~>1.10'
   s.add_dependency 'grpc', '~>1.65'
   s.add_dependency 'google-protobuf', '~>4.27'
   s.add_dependency 'keccak', '~>1.3'
