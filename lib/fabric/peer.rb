@@ -3,7 +3,7 @@ require 'peer/peer_services_pb'
 module Fabric
   class Peer < ClientStub
     def client
-      @client ||= Protos::Endorser::Stub.new(host, { credentials: creds, option_key: options }) # combined creds & options
+      @client ||= Protos::Endorser::Stub.new(host, creds) # removed , options
     end
 
     def send_process_proposal(proposal)
