@@ -28,9 +28,9 @@ module FabricCA
       connection(options).send(method) do |request|
         case method
         when :get, :delete
-          request.url(URI.encode(path), params)
+          request.url(URI::DEFAULT_PARSER.escape(path), params)
         when :post, :put
-          request.path = URI.encode path
+          request.path = URI::DEFAULT_PARSER.escape(path)
           request.body = params unless params.empty?
         end
       end
