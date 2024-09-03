@@ -31,9 +31,7 @@ module Fabric
     end
 
     def generate_private_key
-      key = OpenSSL::PKey::EC.new curve
-      key.generate_key!
-
+      key = OpenSSL::PKey::EC.generate(curve)
       key.private_key.to_i.to_s(16).downcase
     end
 
