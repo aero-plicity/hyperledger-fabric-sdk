@@ -123,20 +123,11 @@ module Fabric
     private
 
     def pkey_from_private_key(private_key)
-      public_key = restore_public_key(private_key)
-      group = OpenSSL::PKey::EC::Group.new(curve)
-
-      # Create a new OpenSSL::PKey::EC object with both keys set at creation
-      key = OpenSSL::PKey::EC.new(group)
-
-      # Set the private key directly on the new key object
-      private_bn = OpenSSL::BN.new(private_key, 16)
-      key.private_key = private_bn
-
-      # Derive the public key point and set it directly
-      public_bn = OpenSSL::BN.new(public_key, 16)
-      public_point = OpenSSL::PKey::EC::Point.new(group, public_bn)
-      key.public_key = public_point
+      public_key = restore_public_key private_key
+      key = OpenSSL::PKey::EC.new curve
+      key.private_key = OpenSSL::BN.new private_key, 16
+      key.public_key = OpenSSL::PKey::EC::Point.new key.group,
+                                                    OpenSSL::BN.new(public_key, 16)
 
       key
     end
