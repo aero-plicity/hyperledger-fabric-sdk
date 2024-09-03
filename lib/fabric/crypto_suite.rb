@@ -38,15 +38,16 @@ module Fabric
     end
 
     def generate_csr(private_key, attrs = [])
-      key = pkey_from_private_key private_key
+      key = pkey_from_private_key(private_key)
 
       req = OpenSSL::X509::Request.new
-      req.public_key = key
-      req.subject = OpenSSL::X509::Name.new attrs
-      req.sign key, @digest
+      req.public_key = key.public_key
+      req.subject = OpenSSL::X509::Name.new(attrs)
+      req.sign(key, @digest)
 
       req
     end
+
 
     def generate_nonce(length = 24)
       OpenSSL::Random.random_bytes length
@@ -73,13 +74,16 @@ module Fabric
     end
 
     def restore_public_key(private_key)
-      private_bn = OpenSSL::BN.new private_key, 16
-      group = OpenSSL::PKey::EC::Group.new curve
-      public_bn = group.generator.mul(private_bn).to_bn
-      public_bn = OpenSSL::PKey::EC::Point.new(group, public_bn).to_bn
+      private_bn = OpenSSL::BN.new(private_key, 16)
+      group = OpenSSL::PKey::EC::Group.new(curve)
 
-      public_bn.to_s(16).downcase
+      # Generate the public point based on the private key
+      public_point = group.generator.mul(private_bn)
+
+      # Return the public key as a hex string
+      public_point.to_bn.to_s(16).downcase
     end
+
 
     def address_from_public_key(public_key)
       bytes = decode_hex public_key
@@ -89,13 +93,15 @@ module Fabric
     end
 
     def build_shared_key(private_key, public_key)
-      pkey = pkey_from_private_key private_key
-      public_bn = OpenSSL::BN.new public_key, 16
-      group = OpenSSL::PKey::EC::Group.new curve
-      public_point = OpenSSL::PKey::EC::Point.new group, public_bn
+      pkey = pkey_from_private_key(private_key)
 
-      encode_hex pkey.dh_compute_key(public_point)
+      public_bn = OpenSSL::BN.new(public_key, 16)
+      group = OpenSSL::PKey::EC::Group.new(curve)
+      public_point = OpenSSL::PKey::EC::Point.new(group, public_bn)
+
+      encode_hex(pkey.dh_compute_key(public_point))
     end
+
 
     def encrypt(secret, data)
       aes = OpenSSL::Cipher.new cipher
@@ -123,23 +129,21 @@ module Fabric
     private
 
     def pkey_from_private_key(private_key)
-      public_key = restore_public_key(private_key)
-      group = OpenSSL::PKey::EC::Group.new(curve)
-
-      # Create a new OpenSSL::PKey::EC object with both keys set at creation
-      key = OpenSSL::PKey::EC.new(group)
-
-      # Set the private key directly on the new key object
+      # Convert private key from hex to a Bignum
       private_bn = OpenSSL::BN.new(private_key, 16)
+
+      # Create a new EC key object with the group and private key set at creation
+      group = OpenSSL::PKey::EC::Group.new(curve)
+      key = OpenSSL::PKey::EC.new(group)
       key.private_key = private_bn
 
-      # Derive the public key point and set it directly
-      public_bn = OpenSSL::BN.new(public_key, 16)
-      public_point = OpenSSL::PKey::EC::Point.new(group, public_bn)
+      # Derive the public key from the private key
+      public_point = group.generator.mul(private_bn)
       key.public_key = public_point
 
       key
     end
+
 
     def prevent_malleability(sequence, order)
       half_order = order >> 1
