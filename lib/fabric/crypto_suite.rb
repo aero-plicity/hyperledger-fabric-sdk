@@ -31,10 +31,25 @@ module Fabric
     end
 
     def generate_private_key
-      key = OpenSSL::PKey::EC.new curve
-      key.generate_key!
+      # key = OpenSSL::PKey::EC.new curve
+      # key.generate_key!
+      #
+      # key.private_key.to_i.to_s(16).downcase
 
-      key.private_key.to_i.to_s(16).downcase
+      # Create a context for key generation
+      ctx = OpenSSL::PKey::PKeyContext.new
+
+      # Initialize the context for key generation with the specified curve
+      params = OpenSSL::OSSL_PARAM.new([
+                                         OpenSSL::OSSL_PARAM.new_utf8_string('group', curve)
+                                       ])
+
+      ctx.fromdata_init
+      pkey = ctx.fromdata(params)
+
+      # Extract the private key and return it as a hex string
+      private_key_bn = pkey.private_key
+      private_key_bn.to_s(16).downcase
     end
 
     def generate_csr(private_key, attrs = [])
