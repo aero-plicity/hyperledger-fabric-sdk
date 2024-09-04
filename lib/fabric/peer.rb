@@ -15,11 +15,9 @@ module Fabric
                     # Create channel credentials from the provided certificate
                     channel_creds = GRPC::Core::ChannelCredentials.new(creds)
 
-                    # Ensure channel arguments and credentials are both passed correctly
-                    merged_options = channel_args.merge({ channel_credentials: channel_creds })
-
-                    # Create the gRPC channel with the host and merged options (channel args and credentials)
-                    channel = GRPC::Core::Channel.new(host, merged_options)
+                    # Create the gRPC channel with two arguments: host and channel_args
+                    # The third argument for credentials must be set in the options
+                    channel = GRPC::Core::Channel.new(host, channel_args, channel_creds)
 
                     # Return the gRPC stub client using the configured channel
                     Protos::Endorser::Stub.new(channel)
