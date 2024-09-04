@@ -120,11 +120,23 @@ module Fabric
 
     private
 
-    def pkey_from_private_key(private_key)
-      public_key = restore_public_key private_key
-      key = OpenSSL::PKey::EC.generate(curve)
-      key.private_key = OpenSSL::BN.new(private_key, 16)
-      key.public_key = OpenSSL::PKey::EC::Point.new(key.group, OpenSSL::BN.new(public_key, 16))
+    def pkey_from_private_key(private_key_hex, curve_name)
+      # Convert the private key from hex string to a Big Number (BN) object
+      private_bn = OpenSSL::BN.new(private_key_hex, 16)
+
+      # Derive the public key point from the private key
+      group = OpenSSL::PKey::EC::Group.new(curve_name)
+      public_key_point = group.generator.mul(private_bn)
+
+      # Prepare the parameters for key generation
+      key_params = {
+        'group' => curve_name,
+        'priv_key' => private_bn,
+        'pub_key' => public_key_point.to_octet_string(:uncompressed)
+      }
+
+      # Use the new OpenSSL::PKey.from_data method to create the key
+      key = OpenSSL::PKey.from_data('EC', key_params)
 
       key
     end
