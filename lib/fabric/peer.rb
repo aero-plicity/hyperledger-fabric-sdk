@@ -25,11 +25,11 @@ module Fabric
                       "grpc.ssl_target_name_override" => ssl_target_name_override
                     }
 
-                    # Return the gRPC stub client using the host, credentials, and channel_args
+                    # Return the gRPC stub client using the host, credentials, and channel_args as keyword arguments
                     Protos::Endorser::Stub.new(
                       host,               # Host (peer address)
                       creds,              # Credentials (TLS credentials)
-                      channel_args: channel_args  # Pass channel_args for SSL target override
+                      **channel_args  # Keyword argument for channel_args
                     )
                   end
     end
