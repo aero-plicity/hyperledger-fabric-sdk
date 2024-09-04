@@ -25,11 +25,18 @@ module Fabric
                       "grpc.ssl_target_name_override" => ssl_target_name_override
                     }
 
-                    # Return the gRPC stub client using the host, credentials, and channel_args as keyword arguments
+                    # Merge any additional gRPC options if needed (like timeout, interceptors)
+                    # Optional: Extract and apply additional options like timeout and interceptors
+                    timeout = stringified_options['timeout'] # Optional
+                    interceptors = stringified_options['interceptors'] || [] # Optional
+
+                    # Pass the host and creds, and include channel_args in the keyword arguments (**kw)
                     Protos::Endorser::Stub.new(
                       host,               # Host (peer address)
                       creds,              # Credentials (TLS credentials)
-                      channel_args: channel_args  # Keyword argument for channel_args
+                      channel_args: channel_args,  # Pass the channel_args as part of the **kw
+                      timeout: timeout,   # Optional: Pass timeout if provided
+                      interceptors: interceptors   # Optional: Pass interceptors if provided
                     )
                   end
     end
