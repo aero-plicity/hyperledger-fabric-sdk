@@ -21,15 +21,15 @@ module Fabric
                         "grpc.ssl_target_name_override" => channel_args["grpc.ssl_target_name_override"]
                       }
                     # end
-                    #
-                    # # Merge grpc_channel_options into the stringified options for gRPC call
-                    # combined_options = stringified_options.merge(grpc_channel_options)
+
+                    # Merge grpc_channel_options into the stringified options for gRPC call
+                    combined_options = stringified_options.merge(grpc_channel_options)
 
                     # Return the gRPC stub client using the host and credentials with options as kw args
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
                       creds,        # Credentials (TLS credentials)
-                      **grpc_channel_options    # Pass options as keyword arguments
+                      **combined_options    # Pass options as keyword arguments
                     )
                   end
     end
