@@ -1,48 +1,59 @@
+GIT
+  remote: https://github.com/anakinj/openssl.git
+  revision: 2b7311069ed976b8e6578f8ddcdf443a6a6cecd6
+  branch: pkey-from-parameters
+  specs:
+    openssl (3.2.0)
+
 PATH
   remote: .
   specs:
-    hyperledger-fabric-sdk (0.2.1)
-      digest-sha3 (~> 1.1)
-      faraday (~> 1.8)
-      faraday_middleware (~> 1.1)
-      google-protobuf (~> 3.10)
-      grpc (~> 1.25)
-      hashie (~> 4.0)
+    hyperledger-fabric-sdk (0.3.0)
+      faraday (~> 1.10)
+      faraday_middleware (~> 1.2)
+      google-protobuf (~> 3.25)
+      grpc (~> 1.65)
+      hashie (~> 5.0)
+      keccak (~> 1.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    digest-sha3 (1.1.0)
-    faraday (1.8.0)
+    faraday (1.10.3)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
       faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.1)
+      faraday-net_http_persistent (~> 1.0)
       faraday-patron (~> 1.0)
       faraday-rack (~> 1.0)
-      multipart-post (>= 1.2, < 3)
+      faraday-retry (~> 1.0)
       ruby2_keywords (>= 0.0.4)
     faraday-em_http (1.0.0)
     faraday-em_synchrony (1.0.0)
     faraday-excon (1.1.0)
     faraday-httpclient (1.0.1)
-    faraday-net_http (1.0.1)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (1.0.2)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
-    faraday_middleware (1.1.0)
+    faraday-retry (1.0.3)
+    faraday_middleware (1.2.0)
       faraday (~> 1.0)
-    google-protobuf (3.18.0)
-    googleapis-common-protos-types (1.2.0)
-      google-protobuf (~> 3.14)
-    grpc (1.41.0)
-      google-protobuf (~> 3.17)
+    google-protobuf (3.25.4)
+    googleapis-common-protos-types (1.15.0)
+      google-protobuf (>= 3.18, < 5.a)
+    grpc (1.66.0)
+      google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    hashie (4.1.0)
-    multipart-post (2.1.1)
-    rake (10.5.0)
+    hashie (5.0.0)
+    keccak (1.3.1)
+    multipart-post (2.4.1)
+    rake (13.2.1)
     ruby2_keywords (0.0.5)
 
 PLATFORMS
@@ -51,7 +62,8 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.0)
   hyperledger-fabric-sdk!
-  rake (~> 10.0)
+  openssl!
+  rake (~> 13.0)
 
 BUNDLED WITH
    2.1.4
