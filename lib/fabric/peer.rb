@@ -10,14 +10,17 @@ module Fabric
                     end
 
                     # Extract channel_args from options if they exist
-                    args = stringified_options.delete("channel_args") || {}
+                    channel_args = stringified_options.delete("channel_args") || {}
 
-                    # Handle the "grpc.ssl_target_name_override" and other channel args
-                    grpc_channel_options = {
-                      "grpc.ssl_target_name_override" => args["grpc.ssl_target_name_override"]
-                    }.compact # Remove nil values from the hash, if any
+                    # Apply grpc.ssl_target_name_override if available
+                    grpc_channel_options = channel_args.transform_keys(&:to_s)
 
-                    # Combine the stringified options with the channel arguments
+                    # Check if grpc.ssl_target_name_override is provided and log a warning if not
+                    if grpc_channel_options["grpc.ssl_target_name_override"].nil?
+                      logger.warn("grpc.ssl_target_name_override is missing! This may cause SSL connection issues.")
+                    end
+
+                    # Merge grpc_channel_options into the stringified options for gRPC call
                     combined_options = stringified_options.merge(
                       channel_args: grpc_channel_options
                     )
