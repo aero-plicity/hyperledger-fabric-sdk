@@ -32,8 +32,11 @@ module Fabric
                       channel_creds         # TLS credentials
                     )
 
-                    # Return the gRPC stub client using the configured channel
-                    Protos::Endorser::Stub.new(channel)
+                    # Return the gRPC stub client using the host and credentials (not the channel directly)
+                    Protos::Endorser::Stub.new(
+                      host,                # Host (peer address)
+                      channel_creds         # Channel credentials (TLS credentials)
+                    )
                   end
     end
 
