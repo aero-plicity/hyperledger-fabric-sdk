@@ -17,9 +17,9 @@ module Fabric
                     #   GRPC.logger.warn("grpc.ssl_target_name_override is nil; skipping this option.")
                     #   grpc_channel_options = {} # Skip the option if it's nil
                     # else
-                    #   grpc_channel_options = {
-                    #     "grpc.ssl_target_name_override" => channel_args["grpc.ssl_target_name_override"]
-                    #   }
+                      grpc_channel_options = {
+                        "grpc.ssl_target_name_override" => channel_args["grpc.ssl_target_name_override"]
+                      }
                     # end
                     #
                     # # Merge grpc_channel_options into the stringified options for gRPC call
@@ -29,7 +29,7 @@ module Fabric
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
                       creds,        # Credentials (TLS credentials)
-                      **channel_args    # Pass options as keyword arguments
+                      **grpc_channel_options    # Pass options as keyword arguments
                     )
                   end
     end
