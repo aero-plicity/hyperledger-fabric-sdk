@@ -20,16 +20,16 @@ module Fabric
                       logger.warn("grpc.ssl_target_name_override is missing! This may cause SSL connection issues.")
                     end
 
-                    # Merge grpc_channel_options into the stringified options for gRPC call
-                    combined_options = stringified_options.merge(
+                    # Define additional options for the gRPC stub initializer
+                    opts = {
                       channel_args: grpc_channel_options
-                    )
+                    }
 
                     # Return the gRPC stub client using the host, credentials, and options
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
                       creds,               # Credentials (TLS credentials)
-                      **combined_options   # Pass options as keyword arguments
+                      **opts               # Pass recognized options as keyword arguments
                     )
                   end
     end
