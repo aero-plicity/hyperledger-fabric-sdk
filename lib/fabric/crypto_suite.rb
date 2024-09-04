@@ -120,17 +120,17 @@ module Fabric
 
     private
 
-    def pkey_from_private_key(private_key_hex, curve_name)
+    def pkey_from_private_key(private_key)
       # Convert the private key from hex string to a Big Number (BN) object
-      private_bn = OpenSSL::BN.new(private_key_hex, 16)
+      private_bn = OpenSSL::BN.new(private_key, 16)
 
       # Derive the public key point from the private key
-      group = OpenSSL::PKey::EC::Group.new(curve_name)
+      group = OpenSSL::PKey::EC::Group.new(curve)
       public_key_point = group.generator.mul(private_bn)
 
       # Prepare the parameters for key generation
       key_params = {
-        'group' => curve_name,
+        'group' => curve,
         'priv_key' => private_bn,
         'pub_key' => public_key_point.to_octet_string(:uncompressed)
       }
