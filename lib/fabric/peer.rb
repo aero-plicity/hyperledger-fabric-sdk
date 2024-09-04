@@ -12,12 +12,15 @@ module Fabric
                       v.is_a?(Symbol) ? v.to_s : v
                     end
 
-                    # Create the gRPC channel using the host, channel arguments (options), and credentials
-                    # Updated: Pass channel options as keyword arguments instead of a hash
+                    # Extract channel_args from options if they exist
+                    channel_args = stringified_options.delete("channel_args") || {}
+
+                    # Pass the channel args along with other options as keyword arguments
                     Protos::Endorser::Stub.new(
                       host,
                       channel_creds,
-                      **stringified_options   # Pass options as keyword arguments
+                      **channel_args,       # Pass the channel args as keyword arguments
+                      **stringified_options # Pass remaining options as keyword arguments
                     )
                   end
     end
