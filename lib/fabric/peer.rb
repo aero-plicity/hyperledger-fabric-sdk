@@ -4,14 +4,14 @@ module Fabric
   class Peer < ClientStub
     def client
       @client ||= begin
-                    # # Ensure `options` has valid gRPC channel args and correct key-value pairs
-                    # stringified_options = options.transform_keys(&:to_s).transform_values do |v|
-                    #   v.is_a?(Symbol) ? v.to_s : v
-                    # end
-                    #
-                    # # Extract channel_args from options if they exist
-                    # channel_args = stringified_options.delete("channel_args") || {}
-                    #
+                    # Ensure `options` has valid gRPC channel args and correct key-value pairs
+                    stringified_options = options.transform_keys(&:to_s).transform_values do |v|
+                      v.is_a?(Symbol) ? v.to_s : v
+                    end
+
+                    # Extract channel_args from options if they exist
+                    channel_args = stringified_options.delete("channel_args") || {}
+
                     # # Handle the "grpc.ssl_target_name_override" value, and check for nil
                     # if channel_args["grpc.ssl_target_name_override"].nil?
                     #   GRPC.logger.warn("grpc.ssl_target_name_override is nil; skipping this option.")
@@ -29,7 +29,7 @@ module Fabric
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
                       creds,        # Credentials (TLS credentials)
-                      **options    # Pass options as keyword arguments
+                      **channel_args    # Pass options as keyword arguments
                     )
                   end
     end
