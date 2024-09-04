@@ -22,7 +22,7 @@ module Fabric
 
                     # Construct the channel_args with the ssl_target_name_override
                     channel_args = {
-                      "grpc.ssl_target_name_override" => ssl_target_name_override
+                      "grpc.ssl_target_name_override": ssl_target_name_override
                     }
 
                     # Return the gRPC stub client using the host and credentials with options as kw args
