@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'google-protobuf', '~>3.25'
   s.add_dependency 'keccak', '~>1.3'
   s.add_dependency 'hashie', '~>5.0'
+  s.add_dependency 'openssl', '~>2.2'
 
   s.add_development_dependency "bundler", "~> 2.0"
   s.add_development_dependency "rake", "~> 13.0"
