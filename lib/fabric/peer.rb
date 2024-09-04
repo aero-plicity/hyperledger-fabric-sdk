@@ -9,7 +9,11 @@ module Fabric
                     channel_creds = GRPC::Core::ChannelCredentials.new(creds)
 
                     # Create the gRPC channel using host, options (channel args), and credentials
-                    channel = GRPC::Core::Channel.new(host, options, channel_creds)
+                    channel = GRPC::Core::Channel.new(
+                      host,
+                      options.transform_keys(&:to_s),
+                      channel_creds
+                    )
 
                     # Return the gRPC stub client using the configured channel
                     Protos::Endorser::Stub.new(channel)
