@@ -4,9 +4,6 @@ module Fabric
   class Peer < ClientStub
     def client
       @client ||= begin
-                    # Create channel credentials from the provided certificate
-                    channel_creds = GRPC::Core::ChannelCredentials.new(creds)
-
                     # Ensure `options` has valid gRPC channel args and correct key-value pairs
                     stringified_options = options.transform_keys(&:to_s).transform_values do |v|
                       v.is_a?(Symbol) ? v.to_s : v
@@ -25,17 +22,14 @@ module Fabric
                       }
                     end
 
-                    # Pass the gRPC channel options as part of the channel initialization
-                    channel = GRPC::Core::Channel.new(
-                      host,                # Host (peer address)
-                      grpc_channel_options, # gRPC channel options
-                      channel_creds         # TLS credentials
-                    )
+                    # Merge grpc_channel_options into the stringified options for gRPC call
+                    combined_options = stringified_options.merge(grpc_channel_options)
 
-                    # Return the gRPC stub client using the host and credentials (not the channel directly)
+                    # Return the gRPC stub client using the host and credentials with options as kw args
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
-                      channel_creds         # Channel credentials (TLS credentials)
+                      creds,        # Credentials (TLS credentials)
+                      **combined_options    # Pass options as keyword arguments
                     )
                   end
     end
