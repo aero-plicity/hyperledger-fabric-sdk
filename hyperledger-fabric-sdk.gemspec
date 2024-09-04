@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Alexandr Kirshin(kirshin)", "Bryan Padron(djlazz3)"]
   s.email         = 'support@aeroplicity.com'
   s.license       = 'MIT'
-  s.required_ruby_version = '~>3.0'
+  s.required_ruby_version = '~>3.3'
 
   s.add_dependency 'faraday_middleware', '~>1.2'
   s.add_dependency 'faraday', '~>1.10'
@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'google-protobuf', '~>3.25'
   s.add_dependency 'keccak', '~>1.3'
   s.add_dependency 'hashie', '~>5.0'
-  s.add_dependency 'openssl', '~>2.2'
 
   s.add_development_dependency "bundler", "~> 2.0"
   s.add_development_dependency "rake", "~> 13.0"
