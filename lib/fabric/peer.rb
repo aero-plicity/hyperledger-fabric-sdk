@@ -12,30 +12,21 @@ module Fabric
                     # Extract channel_args from options if they exist
                     args = stringified_options.delete("channel_args") || {}
 
-                    # # Handle the "grpc.ssl_target_name_override" value, and check for nil
-                    # if channel_args["grpc.ssl_target_name_override"].nil?
-                    #   GRPC.logger.warn("grpc.ssl_target_name_override is nil; skipping this option.")
-                    #   grpc_channel_options = {} # Skip the option if it's nil
-                    # else
+                    # Handle the "grpc.ssl_target_name_override" and other channel args
+                    grpc_channel_options = {
+                      "grpc.ssl_target_name_override" => args["grpc.ssl_target_name_override"]
+                    }.compact # Remove nil values from the hash, if any
 
-                    opts = {
-                      channel_args: {
-                        "grpc.ssl_target_name_override" => args["grpc.ssl_target_name_override"]
-                      }
-                    }
+                    # Combine the stringified options with the channel arguments
+                    combined_options = stringified_options.merge(
+                      channel_args: grpc_channel_options
+                    )
 
-                    # end
-
-                    # Merge grpc_channel_options into the stringified options for gRPC call
-                    combined_options = stringified_options.merge(grpc_channel_options)
-
-                    Rails.Logger.info("OPTIONS: #{options}")
-
-                    # Return the gRPC stub client using the host and credentials with options as kw args
+                    # Return the gRPC stub client using the host, credentials, and options
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
-                      creds,        # Credentials (TLS credentials)
-                      **opts    # Pass options as keyword arguments
+                      creds,               # Credentials (TLS credentials)
+                      **combined_options   # Pass options as keyword arguments
                     )
                   end
     end
