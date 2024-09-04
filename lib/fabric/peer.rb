@@ -10,26 +10,18 @@ module Fabric
                     end
 
                     # Extract channel_args from options if they exist
-                    channel_args = stringified_options.delete("channel_args") || {}
+                    args = stringified_options.delete("channel_args") || {}
 
-                    # Apply grpc.ssl_target_name_override if available
-                    grpc_channel_options = channel_args.transform_keys(&:to_s)
-
-                    # Check if grpc.ssl_target_name_override is provided and log a warning if not
-                    if grpc_channel_options["grpc.ssl_target_name_override"].nil?
-                      logger.warn("grpc.ssl_target_name_override is missing! This may cause SSL connection issues.")
-                    end
-
-                    # Define additional options for the gRPC stub initializer
-                    opts = {
-                      channel_args: grpc_channel_options
+                    # Construct the channel_args with the ssl_target_name_override
+                    channel_args = {
+                      "grpc.ssl_target_name_override" => args["grpc.ssl_target_name_override"]
                     }
 
                     # Return the gRPC stub client using the host, credentials, and options
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
                       creds,               # Credentials (TLS credentials)
-                      **opts               # Pass recognized options as keyword arguments
+                      channel_args: channel_args # Pass channel_args as a keyword argument
                     )
                   end
     end
