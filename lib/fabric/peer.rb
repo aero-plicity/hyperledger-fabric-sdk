@@ -15,13 +15,18 @@ module Fabric
                     # Extract channel_args from options if they exist
                     channel_args = stringified_options.delete("channel_args") || {}
 
-                    # Pass the channel args along with other options as keyword arguments
-                    Protos::Endorser::Stub.new(
-                      host,
-                      channel_creds,
-                      **channel_args,       # Pass the channel args as keyword arguments
-                      **stringified_options # Pass remaining options as keyword arguments
+                    # gRPC expects channel args to be passed as a hash (not as keyword arguments)
+                    grpc_channel_options = { "grpc.ssl_target_name_override" => channel_args["grpc.ssl_target_name_override"] }
+
+                    # Pass the gRPC channel options as part of the channel initialization
+                    channel = GRPC::Core::Channel.new(
+                      host,                # Host (peer address)
+                      grpc_channel_options, # gRPC channel options
+                      channel_creds         # TLS credentials
                     )
+
+                    # Return the gRPC stub client using the configured channel
+                    Protos::Endorser::Stub.new(channel)
                   end
     end
 
