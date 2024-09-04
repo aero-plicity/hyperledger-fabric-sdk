@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Alexandr Kirshin(kirshin)", "Bryan Padron(djlazz3)"]
   s.email         = 'support@aeroplicity.com'
   s.license       = 'MIT'
-  s.required_ruby_version = '>= 3.3.4'
+  s.required_ruby_version = '~>3.0'
 
   s.add_dependency 'faraday_middleware', '~>1.2'
   s.add_dependency 'faraday', '~>1.10'
