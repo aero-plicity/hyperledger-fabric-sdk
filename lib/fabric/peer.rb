@@ -29,7 +29,7 @@ module Fabric
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
                       creds,               # Credentials (TLS credentials)
-                      channel_args: channel_args # Pass channel_args as a keyword argument
+                      **channel_args # Pass channel_args as a keyword argument
                     )
                   end
     end
