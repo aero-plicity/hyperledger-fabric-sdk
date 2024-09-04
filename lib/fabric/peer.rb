@@ -13,14 +13,12 @@ module Fabric
                     end
 
                     # Create the gRPC channel using the host, channel arguments (options), and credentials
-                    channel = GRPC::Core::Channel.new(
-                      host,               # Host (peer address)
-                      stringified_options,  # Channel options (must be a valid hash with String or Integer values)
-                      channel_creds        # TLS credentials
+                    # Updated: Pass channel options as keyword arguments instead of a hash
+                    Protos::Endorser::Stub.new(
+                      host,
+                      channel_creds,
+                      **stringified_options   # Pass options as keyword arguments
                     )
-
-                    # Return the gRPC stub client using the configured channel
-                    Protos::Endorser::Stub.new(channel)
                   end
     end
 
