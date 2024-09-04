@@ -15,8 +15,15 @@ module Fabric
                     # Extract channel_args from options if they exist
                     channel_args = stringified_options.delete("channel_args") || {}
 
-                    # gRPC expects channel args to be passed as a hash (not as keyword arguments)
-                    grpc_channel_options = { "grpc.ssl_target_name_override" => channel_args["grpc.ssl_target_name_override"] }
+                    # Handle the "grpc.ssl_target_name_override" value, and check for nil
+                    if channel_args["grpc.ssl_target_name_override"].nil?
+                      GRPC.logger.warn("grpc.ssl_target_name_override is nil; skipping this option.")
+                      grpc_channel_options = {} # Skip the option if it's nil
+                    else
+                      grpc_channel_options = {
+                        "grpc.ssl_target_name_override" => channel_args["grpc.ssl_target_name_override"]
+                      }
+                    end
 
                     # Pass the gRPC channel options as part of the channel initialization
                     channel = GRPC::Core::Channel.new(
