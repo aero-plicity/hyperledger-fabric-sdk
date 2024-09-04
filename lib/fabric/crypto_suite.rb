@@ -122,11 +122,23 @@ module Fabric
 
     def pkey_from_private_key(private_key)
       public_key = restore_public_key private_key
-      key = OpenSSL::PKey::EC.new curve
-      key.private_key= OpenSSL::BN.new(private_key, 16)
-      key.public_key= OpenSSL::PKey::EC::Point.new(key.group, OpenSSL::BN.new(public_key, 16))
 
-      key
+      group = OpenSSL::PKey::EC::Group.new(curve)
+
+      private_key_bn   = OpenSSL::BN.new(private_key, 16)
+      public_key_bn    = OpenSSL::BN.new(public_key, 16)
+      public_key_point = OpenSSL::PKey::EC::Point.new(group, public_key_bn)
+
+      asn1 = OpenSSL::ASN1::Sequence(
+        [
+          OpenSSL::ASN1::Integer.new(1),
+          OpenSSL::ASN1::OctetString(private_key_bn.to_s(2)),
+          OpenSSL::ASN1::ObjectId(curve, 0, :EXPLICIT),
+          OpenSSL::ASN1::BitString(public_key_point.to_octet_string(:uncompressed), 1, :EXPLICIT)
+        ]
+      )
+
+      OpenSSL::PKey::EC.new(asn1.to_der)
     end
 
     def prevent_malleability(sequence, order)
