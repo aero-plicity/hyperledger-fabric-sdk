@@ -4,19 +4,17 @@ module Fabric
   class Peer < ClientStub
     def client
       @client ||= begin
-                    # Assume `host`, `creds`, and `options` are directly available in scope as you mentioned.
-
                     # Create channel credentials from the provided certificate
                     channel_creds = GRPC::Core::ChannelCredentials.new(creds)
 
-                    # Transform the options hash from symbols to strings if needed
+                    # Transform the options hash from symbols to strings (gRPC expects string keys for channel args)
                     stringified_options = options.transform_keys(&:to_s)
 
-                    # Pass channel args via the channel_args keyword argument, not as a second parameter
+                    # Create the gRPC channel using the host, channel arguments (options), and credentials
                     channel = GRPC::Core::Channel.new(
-                      host, # Host
-                      channel_args: stringified_options, # Channel options
-                      creds: channel_creds # TLS credentials
+                      host,               # Host (peer address)
+                      stringified_options, # Channel options (string keys)
+                      channel_creds        # TLS credentials
                     )
 
                     # Return the gRPC stub client using the configured channel
