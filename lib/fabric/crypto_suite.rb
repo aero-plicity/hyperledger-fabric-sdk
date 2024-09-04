@@ -122,10 +122,10 @@ module Fabric
 
     def pkey_from_private_key(private_key)
       public_key = restore_public_key private_key
-      key = OpenSSL::PKey::EC.new curve
-      key.set_private_key(OpenSSL::BN.new(private_key, 16))
-      key.set_public_key(OpenSSL::PKey::EC::Point.new(key.group, OpenSSL::BN.new(public_key, 16)))
-    
+      key = OpenSSL::PKey::EC.generate(curve)
+      key.private_key = OpenSSL::BN.new(private_key, 16)
+      key.public_key = OpenSSL::PKey::EC::Point.new(key.group, OpenSSL::BN.new(public_key, 16))
+
       key
     end
 
