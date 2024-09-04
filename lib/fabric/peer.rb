@@ -25,6 +25,8 @@ module Fabric
                     # Merge grpc_channel_options into the stringified options for gRPC call
                     combined_options = stringified_options.merge(grpc_channel_options)
 
+                    Rails.Logger.info("OPTIONS: #{options}")
+
                     # Return the gRPC stub client using the host and credentials with options as kw args
                     Protos::Endorser::Stub.new(
                       host,                # Host (peer address)
