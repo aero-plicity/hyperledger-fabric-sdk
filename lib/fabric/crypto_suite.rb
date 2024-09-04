@@ -121,24 +121,26 @@ module Fabric
     private
 
     def pkey_from_private_key(private_key)
-      # Initialize a new EVP_PKEY_CTX for key creation
-      ctx = OpenSSL::PKey::PKeyContext.new
-    
-      # Define parameters using OSSL_PARAM
-      params = OpenSSL::OSSL_PARAM.new([
-        OpenSSL::OSSL_PARAM.new_utf8_string('group', curve),
-        OpenSSL::OSSL_PARAM.new_bn('priv', OpenSSL::BN.new(private_key, 16)),
-        OpenSSL::OSSL_PARAM.new_bn('pub', OpenSSL::BN.new(public_key, 16))
-      ])
-    
-      # Use EVP_PKEY_fromdata_init to initialize the context for key creation
-      ctx.fromdata_init
-    
-      # Use EVP_PKEY_fromdata to create the key from the provided data
-      pkey = ctx.fromdata(params)
-    
-      # Return the created EVP_PKEY object
-      pkey
+      # Convert the private key from hex string to a Big Number (BN) object
+      private_bn = OpenSSL::BN.new(private_key, 16)
+      
+      # Create a new EVP_PKEY context for EC key creation
+      ctx = OpenSSL::PKey::PKey.new
+      
+      # Initialize the context for key generation
+      ctx = OpenSSL::PKey::EC.new(curve)
+      
+      # Prepare the OSSL_PARAM structure to hold the key components
+      params = {
+        'group' => curve,
+        'priv' => private_bn
+      }
+      
+      # Use EVP_PKEY_fromdata to create the EC key from the parameters
+      key = OpenSSL::PKey::EC.generate(params)
+      
+      # Return the key object
+      key
     end
 
     def prevent_malleability(sequence, order)
