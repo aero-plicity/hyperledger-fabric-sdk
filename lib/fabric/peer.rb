@@ -12,24 +12,24 @@ module Fabric
                     # Extract channel_args from options if they exist
                     args = stringified_options.delete("channel_args") || {}
 
-                    # Handle both string and symbol keys for grpc.ssl_target_name_override
+                    # Extract grpc.ssl_target_name_override and ensure it's a valid string
                     ssl_target_name_override = args["grpc.ssl_target_name_override"] || args[:'grpc.ssl_target_name_override']
 
-                    # Raise an error if the value is nil, or log a warning if it isn't set correctly
-                    if ssl_target_name_override.nil?
-                      logger.warn("grpc.ssl_target_name_override is missing or invalid! This may cause SSL connection issues.")
+                    # Ensure grpc.ssl_target_name_override is present and is a valid string
+                    if ssl_target_name_override.nil? || !ssl_target_name_override.is_a?(String)
+                      raise "grpc.ssl_target_name_override is required and must be a string, but got #{ssl_target_name_override.class}."
                     end
 
-                    # Construct the channel_args with the ssl_target_name_override
+                    # Prepare the channel_args with grpc.ssl_target_name_override
                     channel_args = {
-                      "grpc.ssl_target_name_override": ssl_target_name_override
+                      "grpc.ssl_target_name_override" => ssl_target_name_override
                     }
 
-                    # Return the gRPC stub client using the host and credentials with options as kw args
+                    # Return the gRPC stub client using the host, credentials, and channel_args
                     Protos::Endorser::Stub.new(
-                      host,                # Host (peer address)
-                      creds,               # Credentials (TLS credentials)
-                      **channel_args # Pass channel_args as a keyword argument
+                      host,               # Host (peer address)
+                      creds,              # Credentials (TLS credentials)
+                      channel_args: channel_args  # Pass channel_args for SSL target override
                     )
                   end
     end
