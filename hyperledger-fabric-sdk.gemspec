@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'hyperledger-fabric-sdk'
-  s.version       = '0.3.0'
+  s.version       = '0.4.0'
   s.date          = Time.now.strftime('%Y-%m-%d')
   s.summary       = "This SDK enables Ruby developers to interact with hyperledger-fabric"
   s.description   = "Ruby SDK for interacting with Hyperledger Fabric blockchain network."
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'faraday_middleware', '~>1.2'
   s.add_dependency 'faraday', '~>1.10'
   s.add_dependency 'grpc', '~>1.66'
-  s.add_dependency 'google-protobuf', '~>3.25'
+  s.add_dependency 'google-protobuf', '>= 3.25', '< 5.0'
   s.add_dependency 'keccak', '~>1.3'
   s.add_dependency 'hashie', '~>5.0'
 
